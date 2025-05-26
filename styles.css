@@ -1,20 +1,170 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     text-align: center;
     transition: background 0.3s, color 0.3s;
 }
 
 .container {
     margin-top: 50px;
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    padding: 40px 30px;
+    border-radius: 16px;
+    display: inline-block;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
 }
 
-input, select, button {
+input, select {
     margin: 10px;
-    padding: 10px;
+    padding: 12px 16px;
     font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    background: #f1f1f1;
+    transition: box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+    box-shadow: 0 0 0 2px #007bff33;
+}
+
+button {
+    margin: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: #fff;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+    background: #0056b3;
+    transform: translateY(-2px) scale(1.03);
+    cursor: pointer;
 }
 
 .dark-mode {
     background: #333;
     color: white;
+}
+
+body.dark-mode {
+    background: #18191a;
+    color: #f1f1f1;
+}
+
+body.dark-mode .container {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+}
+
+body.dark-mode input, 
+body.dark-mode select {
+    background: #232526;
+    color: #f1f1f1;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#result {
+    margin-top: 18px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #00e676;
+}
+
+.live-rates-container {
+    margin: 40px auto 0 auto;
+    max-width: 600px;
+    background: #222;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+
+.live-rates-container h2 {
+    margin-bottom: 16px;
+    color: #fff;
+}
+
+#liveRatesTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: #2d2d2d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#liveRatesTable th, #liveRatesTable td {
+    padding: 10px 12px;
+    text-align: left;
+    color: #f1f1f1;
+}
+
+#liveRatesTable th {
+    background: #333;
+    font-weight: 700;
+}
+
+#liveRatesTable tr:nth-child(even) {
+    background: #242424;
+}
+
+.popular-conversions-container {
+    margin: 40px auto;
+    max-width: 600px;
+    background: #222;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+
+.popular-conversions-container h2 {
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+.popular-conversions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.popular-conversions button {
+    background: #fff;
+    color: #222;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 1rem;
+    margin: 4px 0;
+    transition: background 0.2s, color 0.2s;
+}
+
+.popular-conversions button:hover {
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .container,
+    .live-rates-container,
+    .popular-conversions-container {
+        width: 95%;
+        padding: 10px;
+    }
+    .popular-conversions {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
