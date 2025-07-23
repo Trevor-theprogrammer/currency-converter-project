@@ -1,64 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FS Currency Converter</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/png" href="Assets/favicon.png">
-</head>
-<body>
-    <div class="container">
-        <h1>FS Currency Converter</h1>
-        <label for="amount">Enter Amount:</label>
-        <input type="number" id="amount" placeholder="Enter amount" min="0" required>
-
-        <label for="fromCurrency">From:</label>
-        <select id="fromCurrency"></select>
-
-        <label for="toCurrency">To:</label>
-        <select id="toCurrency"></select>
-
-        <button onclick="convertCurrency()">Convert</button>
-        <p id="result">Converted amount will appear here.</p>
-        <canvas id="rateChart" width="400" height="200"></canvas>
-
-        <button onclick="toggleTheme()">Toggle Theme</button>
-    </div>
-    <!-- Live Rates Section -->
-    <div class="live-rates-container">
-        <h2>Live Rates</h2>
-        <table id="liveRatesTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Bid</th>
-                    <th>Ask</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- JS will fill this -->
-            </tbody>
-        </table>
-        <a href="#" id="viewMoreRates">View More</a>
-    </div>
-    <!-- Popular Conversions Section -->
-    <div class="popular-conversions-container">
-        <h2>Popular conversions</h2>
-        <div class="popular-conversions">
-            <button data-from="EUR" data-to="USD">1 EUR to USD</button>
-            <button>1 EUR to JPY</button>
-            <button>1 EUR to GBP</button>
-            <button>1 EUR to AUD</button>
-            <button>1 EUR to CAD</button>
-            <button>1 EUR to CHF</button>
-            <button>1 EUR to CNY</button>
-            <button>1 EUR to HKD</button>
-            <button>1 EUR to NZD</button>
-            <button>1 EUR to SEK</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XE Currency Converter - Live Exchange Rates</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" type="image/png" href="Assets/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <meta
+      name="description"
+      content="Convert currencies with live exchange rates. Professional currency converter with real-time market data."
+    />
+  </head>
+  <body>
+    <!-- Professional Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-left">
+          <div class="logo">
+            <h1>XE<span>Currency</span></h1>
+          </div>
         </div>
-    </div>
+
+        <nav class="main-nav">
+          <ul class="nav-list">
+            <li><a href="#converter" class="nav-link active">Converter</a></li>
+            <li><a href="#rates" class="nav-link">Live Rates</a></li>
+            <li><a href="#charts" class="nav-link">Charts</a></li>
+            <li><a href="#news" class="nav-link">News</a></li>
+            <li><a href="#tools" class="nav-link">Tools</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-right">
+          <button
+            class="theme-toggle"
+            onclick="toggleTheme()"
+            aria-label="Toggle dark mode"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+          <button
+            class="mobile-menu-toggle"
+            onclick="toggleMobileMenu()"
+            aria-label="Toggle mobile menu"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-nav-list">
+          <li><a href="#converter" class="mobile-nav-link">Converter</a></li>
+          <li><a href="#rates" class="mobile-nav-link">Live Rates</a></li>
+          <li><a href="#charts" class="mobile-nav-link">Charts</a></li>
+          <li><a href="#news" class="mobile-nav-link">News</a></li>
+          <li><a href="#tools" class="mobile-nav-link">Tools</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- Hero Section with Converter -->
+    <section class="hero-section">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title">Currency Converter</h1>
+          <p class="hero-subtitle">
+            Check live foreign currency exchange rates
+          </p>
+
+          <div class="converter-card">
+            <div class="converter-header">
+              <div class="converter-tabs">
+                <button class="tab active" data-tab="converter">
+                  Converter
+                </button>
+                <button class="tab" data-tab="chart">Chart</button>
+              </div>
+            </div>
+
+            <div class="converter-body">
+              <div class="amount-input">
+                <label>Amount</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="amount"
+                    value="1"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter amount"
+                  />
+                  <span class="currency-symbol" id="fromSymbol">$</span>
+                </div>
+              </div>
+
+              <div class="currency-row">
+                <div class="currency-group">
+                  <label>From</label>
+                  <div class="currency-selector">
+                    <div class="flag-container">
+                      <span class="flag" id="fromFlag">🇺🇸</span>
+                    </div>
+                    <select
+                      id="fromCurrency"
+                      class="currency-select"
+                      aria-label="Select from currency"
+                    >
+                      <option value="USD">USD - US Dollar</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  class="swap-btn"
+                  onclick="swapCurrencies()"
+                  title="Swap currencies"
+                >
+                  <i class="fas fa-exchange-alt"></i>
+                </button>
+
+                <div class="currency-group">
+                  <label>To</label>
+                  <div class="currency-selector">
+                    <div class="flag-container">
+                      <span class="flag" id="toFlag">🇪🇺</span>
+                    </div>
+                    <select
+                      id="toCurrency"
+                      class="currency-select"
+                      aria-label="Select to currency"
+                    >
+                      <option value="EUR">EUR - Euro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button class="convert-btn" onclick="convertCurrency()">
+                <i class="fas fa-calculator"></i>
+                Convert
+              </button>
+
+              <div class="result-display">
+                <div class="result-amount" id="resultAmount">
+                  1.00 USD = 0.85 EUR
+                </div>
+                <div class="result-rate" id="resultRate">
+                  1 USD = 0.850000 EUR
+                </div>
+                <div class="result-time" id="resultTime">
+                  Last updated: Just now
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-sidebar">
+          <div class="market-summary">
+            <h3>Market Summary</h3>
+            <div class="market-item">
+              <span class="currency-pair">EUR/USD</span>
+              <span class="rate">1.0850</span>
+              <span class="change positive">+0.12%</span>
+            </div>
+            <div class="market-item">
+              <span class="currency-pair">GBP/USD</span>
+              <span class="rate">1.2650</span>
+              <span class="change negative">-0.08%</span>
+            </div>
+            <div class="market-item">
+              <span class="currency-pair">USD/JPY</span>
+              <span class="rate">149.50</span>
+              <span class="change positive">+0.25%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Currencies Section -->
+    <section class="popular-section">
+      <div class="section-header">
+        <h2>Popular Conversions</h2>
+        <p>Quick access to commonly used currency pairs</p>
+      </div>
+      <div class="popular-grid">
+        <button class="popular-card" data-from="EUR" data-to="USD">
+          <div class="popular-flags">🇪🇺 → 🇺🇸</div>
+          <div class="popular-text">1 EUR to USD</div>
+          <div class="popular-rate" id="rate-EUR-USD">Loading...</div>
+        </button>
+        <button class="popular-card" data-from="USD" data-to="EUR">
+          <div class="popular-flags">🇺🇸 → 🇪🇺</div>
+          <div class="popular-text">1 USD to EUR</div>
+          <div class="popular-rate" id="rate-USD-EUR">Loading...</div>
+        </button>
+        <button class="popular-card" data-from="GBP" data-to="USD">
+          <div class="popular-flags">🇬🇧 → 🇺🇸</div>
+          <div class="popular-text">1 GBP to USD</div>
+          <div class="popular-rate" id="rate-GBP-USD">Loading...</div>
+        </button>
+        <button class="popular-card" data-from="USD" data-to="JPY">
+          <div class="popular-flags">🇺🇸 → 🇯🇵</div>
+          <div class="popular-text">1 USD to JPY</div>
+          <div class="popular-rate" id="rate-USD-JPY">Loading...</div>
+        </button>
+        <button class="popular-card" data-from="EUR" data-to="GBP">
+          <div class="popular-flags">🇪🇺 → 🇬🇧</div>
+          <div class="popular-text">1 EUR to GBP</div>
+          <div class="popular-rate" id="rate-EUR-GBP">Loading...</div>
+        </button>
+        <button class="popular-card" data-from="USD" data-to="CAD">
+          <div class="popular-flags">🇺🇸 → 🇨🇦</div>
+          <div class="popular-text">1 USD to CAD</div>
+          <div class="popular-rate" id="rate-USD-CAD">Loading...</div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="container">
+        <h2>Why Choose Our Currency Converter</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h3>Real-Time Rates</h3>
+            <p>
+              Get live exchange rates updated every minute from trusted sources
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Secure & Reliable</h3>
+            <p>
+              Bank-level security with encrypted connections and data protection
+            </p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-mobile-alt"></i>
+            </div>
+            <h3>Mobile Friendly</h3>
+            <p>Responsive design that works perfectly on all devices</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Historical Data</h3>
+            <p>Track currency trends with historical exchange rate charts</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3>XE Currency</h3>
+            <p>
+              Your trusted currency converter with real-time exchange rates and
+              professional tools.
+            </p>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="#converter">Currency Converter</a></li>
+              <li><a href="#rates">Live Rates</a></li>
+              <li><a href="#charts">Charts</a></li>
+              <li><a href="#tools">Tools</a></li>
+            </ul>
+          </div>
+          <div class="footer-section">
+            <h4>Popular Currencies</h4>
+            <ul>
+              <li><a href="#" data-from="USD" data-to="EUR">USD to EUR</a></li>
+              <li><a href="#" data-from="GBP" data-to="USD">GBP to USD</a></li>
+              <li><a href="#" data-from="EUR" data-to="GBP">EUR to GBP</a></li>
+              <li><a href="#" data-from="USD" data-to="JPY">USD to JPY</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 XE Currency Converter. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</body>
+  </body>
 </html>
