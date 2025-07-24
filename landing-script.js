@@ -109,8 +109,13 @@ document
       const data = await response.json();
 
       if (response.ok) {
+        // Store session data
+        localStorage.setItem('sessionToken', data.session_token);
+        localStorage.setItem('userEmail', data.email);
+        localStorage.setItem('userId', data.user_id);
+
         alert('Login successful! Redirecting to dashboard...');
-        window.location.href = '/index.html';
+        window.location.href = '/dashboard';
       } else {
         alert(data.error || 'Login failed. Please try again.');
       }
@@ -155,8 +160,8 @@ document
       const data = await response.json();
 
       if (response.ok) {
-        alert('Account created successfully! Redirecting to dashboard...');
-        window.location.href = '/index.html';
+        alert('Account created successfully! Please log in.');
+        switchToLogin();
       } else {
         alert(data.error || 'Registration failed. Please try again.');
       }
