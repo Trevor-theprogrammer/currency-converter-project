@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XE Currency Dashboard - Your Account</title>
+    <link rel="stylesheet" href="dashboard-styles.css" />
+    <link rel="icon" type="image/png" href="Assets/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-left">
+          <div class="logo">
+            <h1>XE<span>Currency</span></h1>
+          </div>
+        </div>
+
+        <nav class="main-nav">
+          <ul class="nav-list">
+            <li><a href="#converter" class="nav-link active">Converter</a></li>
+            <li><a href="#history" class="nav-link">History</a></li>
+            <li><a href="#favorites" class="nav-link">Favorites</a></li>
+            <li><a href="#alerts" class="nav-link">Alerts</a></li>
+            <li><a href="#profile" class="nav-link">Profile</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-right">
+          <div class="user-menu">
+            <button class="user-btn" onclick="toggleUserMenu()">
+              <i class="fas fa-user-circle"></i>
+              <span id="userEmail">User</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+              <a href="#profile"><i class="fas fa-user"></i> Profile</a>
+              <a href="#" onclick="logout()"
+                ><i class="fas fa-sign-out-alt"></i> Logout</a
+              >
+            </div>
+          </div>
+          <button
+            class="theme-toggle"
+            onclick="toggleTheme()"
+            aria-label="Toggle dark mode"
+          >
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+      <!-- Welcome Section -->
+      <section class="welcome-section">
+        <div class="container">
+          <h1>Welcome to Your Dashboard</h1>
+          <p>Manage your currency conversions, track history, and set alerts</p>
+        </div>
+      </section>
+
+      <!-- Quick Stats -->
+      <section class="stats-section">
+        <div class="container">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <i class="fas fa-exchange-alt"></i>
+              <h3 id="totalConversions">0</h3>
+              <p>Total Conversions</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-star"></i>
+              <h3 id="totalFavorites">0</h3>
+              <p>Favorite Pairs</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-bell"></i>
+              <h3 id="totalAlerts">0</h3>
+              <p>Active Alerts</p>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-calendar"></i>
+              <h3 id="lastActivity">Never</h3>
+              <p>Last Activity</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Currency Converter -->
+      <section class="converter-section" id="converter">
+        <div class="container">
+          <h2>Currency Converter</h2>
+          <div class="converter-card">
+            <div class="converter-body">
+              <div class="amount-input">
+                <label>Amount</label>
+                <div class="input-group">
+                  <input
+                    type="number"
+                    id="amount"
+                    value="1"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter amount"
+                  />
+                  <span class="currency-symbol" id="fromSymbol">$</span>
+                </div>
+              </div>
+
+              <div class="currency-row">
+                <div class="currency-group">
+                  <label>From</label>
+                  <div class="currency-selector">
+                    <div class="flag-container">
+                      <span class="flag" id="fromFlag">🇺🇸</span>
+                    </div>
+                    <select id="fromCurrency" class="currency-select">
+                      <option value="USD">USD - US Dollar</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button
+                  class="swap-btn"
+                  onclick="swapCurrencies()"
+                  title="Swap currencies"
+                >
+                  <i class="fas fa-exchange-alt"></i>
+                </button>
+
+                <div class="currency-group">
+                  <label>To</label>
+                  <div class="currency-selector">
+                    <div class="flag-container">
+                      <span class="flag" id="toFlag">🇪🇺</span>
+                    </div>
+                    <select id="toCurrency" class="currency-select">
+                      <option value="EUR">EUR - Euro</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button class="convert-btn" onclick="convertCurrency()">
+                <i class="fas fa-calculator"></i>
+                Convert
+              </button>
+
+              <div class="result-display">
+                <div class="result-amount" id="resultAmount">
+                  1.00 USD = 0.85 EUR
+                </div>
+                <div class="result-rate" id="resultRate">
+                  1 USD = 0.850000 EUR
+                </div>
+                <div class="result-time" id="resultTime">
+                  Last updated: Just now
+                </div>
+              </div>
+
+              <div class="action-buttons">
+                <button class="btn-secondary" onclick="addToFavorites()">
+                  <i class="fas fa-star"></i> Add to Favorites
+                </button>
+                <button class="btn-secondary" onclick="saveToHistory()">
+                  <i class="fas fa-history"></i> Save to History
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Conversion History -->
+      <section class="history-section" id="history">
+        <div class="container">
+          <h2>Conversion History</h2>
+          <div class="history-controls">
+            <button class="btn-secondary" onclick="refreshHistory()">
+              <i class="fas fa-sync"></i> Refresh
+            </button>
+            <button class="btn-secondary" onclick="clearHistory()">
+              <i class="fas fa-trash"></i> Clear All
+            </button>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="empty-state">
+              <i class="fas fa-history"></i>
+              <p>No conversion history yet</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Favorite Pairs -->
+      <section class="favorites-section" id="favorites">
+        <div class="container">
+          <h2>Favorite Currency Pairs</h2>
+          <div class="favorites-list" id="favoritesList">
+            <div class="empty-state">
+              <i class="fas fa-star"></i>
+              <p>No favorite pairs yet</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rate Alerts -->
+      <section class="alerts-section" id="alerts">
+        <div class="container">
+          <h2>Rate Alerts</h2>
+          <div class="alert-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>From Currency</label>
+                <select id="alertFromCurrency" class="currency-select">
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>To Currency</label>
+                <select id="alertToCurrency" class="currency-select">
+                  <option value="EUR">EUR</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Target Rate</label>
+                <input
+                  type="number"
+                  id="alertTargetRate"
+                  step="0.0001"
+                  placeholder="0.8500"
+                />
+              </div>
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <button class="btn-primary" onclick="createAlert()">
+                  <i class="fas fa-plus"></i> Create Alert
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="alerts-list" id="alertsList">
+            <div class="empty-state">
+              <i class="fas fa-bell"></i>
+              <p>No rate alerts set</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- User Profile -->
+      <section class="profile-section" id="profile">
+        <div class="container">
+          <h2>User Profile</h2>
+          <div class="profile-card">
+            <form id="profileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Email</label>
+                  <input type="email" id="profileEmail" readonly />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    id="profileFirstName"
+                    placeholder="Enter first name"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    id="profileLastName"
+                    placeholder="Enter last name"
+                  />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input
+                    type="tel"
+                    id="profilePhone"
+                    placeholder="Enter phone number"
+                  />
+                </div>
+              </div>
+              <div class="form-actions">
+                <button
+                  type="button"
+                  class="btn-primary"
+                  onclick="updateProfile()"
+                >
+                  <i class="fas fa-save"></i> Update Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+
+    <script src="dashboard-script.js"></script>
+  </body>
+</html>
